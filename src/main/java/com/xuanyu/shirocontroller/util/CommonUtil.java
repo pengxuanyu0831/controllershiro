@@ -4,12 +4,18 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
 
+/*
+ * json 工具类
+ */
+
 
 public class CommonUtil {
+
+    // 返回一个空的成功消息的json
     public static JSONObject successJson() {
         return successJson(new JSONObject());
     }
-
+    // 返回一个成功码100的成功信息的json
     public static JSONObject successJson(Object info) {
         JSONObject resultJson = new JSONObject();
         resultJson.put("code", Constants.SUCCESS_CODE);
