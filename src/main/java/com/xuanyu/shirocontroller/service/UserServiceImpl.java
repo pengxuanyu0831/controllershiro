@@ -17,10 +17,10 @@ public class UserServiceImpl implements UserService {
 
     // 获取用户列表
     @Override
-    public JSONObject listUser(JSONObject jsonObject){
+    public JSONObject listUsers(JSONObject jsonObject){
         CommonUtil.fillPageParam(jsonObject);
         int count = userDao.countUser(jsonObject);
-        List<JSONObject> list  = userDao.listUser(jsonObject);
+        List<JSONObject> list  = userDao.listUsers(jsonObject);
         return CommonUtil.successPage(jsonObject,list,count);
     }
 
@@ -33,6 +33,30 @@ public class UserServiceImpl implements UserService {
         }
         userDao.addUser(jsonObject);
         return CommonUtil.successJson();
+    }
+    // 获取用户关联的角色
+    @Override
+    public JSONObject getAllRoles(){
+        List<JSONObject> roles = userDao.getAllRoles();
+        return CommonUtil.successJson(roles);
+    }
+
+    @Override
+    public JSONObject updateUser(JSONObject jsonObject){
+        userDao.updateUser(jsonObject);
+        return CommonUtil.successJson();
+    }
+
+    @Override
+    public JSONObject listRoles(){
+        List<JSONObject> roles = userDao.listRoles();
+        return CommonUtil.successJson(roles);
+    }
+
+    @Override
+    public JSONObject listAllPermission(){
+        List<JSONObject> permissions = userDao.listAllPermission();
+        return CommonUtil.successJson(permissions);
     }
 
 

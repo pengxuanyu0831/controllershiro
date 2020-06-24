@@ -5,7 +5,7 @@ import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 
 public interface UserService {
     // 用户列表
-    JSONObject listUser(JSONObject jsonObject);
+    JSONObject listUsers(JSONObject jsonObject);
     // 全部角色
     JSONObject getAllRoles();
     // 添加用户
@@ -13,7 +13,7 @@ public interface UserService {
     // 修改用户
     JSONObject updateUser(JSONObject jsonObject);
     // 角色列表
-    JSONObject listRole();
+    JSONObject listRoles();
     // 查询所有权限
     JSONObject listAllPermission();
     // 添加角色
