@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.security.auth.login.CredentialNotFoundException;
 import java.beans.Transient;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -88,7 +89,10 @@ public class UserServiceImpl implements UserService {
         // 修改角色名称
         updateRoleName(jsonObject,roleInfo);
         // 添加新的权限
-        addNewPermission()
+        addNewPermission(roleId,newPerms,olePerms);
+        removeOldPermission(roleId,newPerms,olePerms);
+        return CommonUtil.successJson();
+
 
     }
 
@@ -98,7 +102,45 @@ public class UserServiceImpl implements UserService {
            userDao.updateRoleName(parmJSON);
         }
     }
-    private addNewPermission(String roleId,)
+    private void addNewPermission(String roleId, Collection<Integer>newPerms,Collection<Integer> oldPerms){
+        List<Integer> waitForInsetr = new ArrayList<>();
+        for(Integer newPerm : newPerms){
+            // ！ ：取反   String.contains : 如果参数出现在字符串中
+            if(!oldPerms.contains(newPerm)){
+                waitForInsetr.add(newPerm);
+            }
+        }
+        if(waitForInsetr.size()>0){
+            userDao.insertRolePermission(roleId,waitForInsetr);
+        }
+    }
+
+    private void removeOldPermission(String roleId,Collection<Integer>newPerms,Collection<Integer>oldPerms){
+        List<Integer>waitForRemove = new ArrayList<>();
+        for(Integer olePerm:oldPerms){
+            if(!newPerms.contains(olePerm)){
+                waitForRemove.add(olePerm);
+            }
+        }
+        if(waitForRemove.size()>0){
+            userDao.deleteOldRolePermission(roleId,waitForRemove);
+        }
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @SuppressWarnings("unchecked")
+    public JSONObject deleteRole(JSONObject jsonObject){
+        JSONObject roleInfo = userDao.getRoleAllInfo(jsonObject);
+        List<JSONObject> users = (List<JSONObject> )roleInfo.get("users");
+        if(users != null && users.size()>0){
+            return CommonUtil.errorJson(ErrorEnum.E_10008);
+        }
+        userDao.removeRole(jsonObject);
+        userDao.removeAllPermissionsWithRole(jsonObject);
+        return CommonUtil.successJson();
+    }
 
 
 }

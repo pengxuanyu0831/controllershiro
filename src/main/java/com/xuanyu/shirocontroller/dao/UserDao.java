@@ -38,5 +38,12 @@ public interface UserDao {
 
     int updateRoleName(JSONObject jsonObject);
 
+    //  删除角色
+    int removeRole(JSONObject jsonObject);
+    //  删除该角色关联所有权限
+    int removeAllPermissionsWithRole(JSONObject jsonObject);
+
+
+
 }
 
