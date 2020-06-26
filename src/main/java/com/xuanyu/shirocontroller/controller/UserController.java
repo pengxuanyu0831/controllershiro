@@ -6,9 +6,7 @@ import com.xuanyu.shirocontroller.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.HttpRequestHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,17 +17,32 @@ import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
-@RequestMapping(".user")
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserService userService;
 
     // 查询用户列表
     @RequiresPermissions("user:list")
-    @GetMapping("/list")
+    @GetMapping("/listUsers")
     public JSONObject listUsers(HttpServletRequest request){
         return userService.listUsers(CommonUtil.requestToJson(request));
     }
+
+    @RequiresPermissions("user:add")
+    @GetMapping("/addUser")
+    public JSONObject addUser(@RequestBody JSONObject requestJson){
+        CommonUtil.addValidation(requestJson,"username , password , nickname , roleId");
+        return userService.addUser(requestJson);
+    }
+
+    @RequiresPermissions("user：update")
+    @PostMapping("/updateUser")
+    public JSONObject updateUser(@RequestBody JSONObject requestJson){
+        CommonUtil.addValidation(requestJson,"nickname , roleId , deleteStaus ,UserId");
+        return userService.updateUser(requestJson);
+    }
+
 
 
 }

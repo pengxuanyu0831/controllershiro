@@ -1,7 +1,10 @@
 package com.xuanyu.shirocontroller.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.xuanyu.shirocontroller.config.CommonJsonExecption;
 
+import javax.naming.CommunicationException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.List;
@@ -101,6 +104,28 @@ public class CommonUtil {
             requestJson.put(paraName,sb.toString());
         }
         return requestJson;
+    }
+    // 校验
+    public static void addValidation(final JSONObject jsonObject,String requireParams){
+        if(!ValidationTools.isNotEmpty(requireParams)){
+            // 校验字段是否为空
+            String[] colums = requireParams.split(",");
+            String misColums = " ";
+            for (String colum : colums){
+                Object val = jsonObject.get(colum.trim());
+                if(ValidationTools.isNotEmpty(val)){
+                    misColums += colum + " ";
+                }
+            }
+            if(!ValidationTools.isNotEmpty(misColums)){
+                jsonObject.clear();
+                jsonObject.put("code",ErrorEnum.E_90003.getErrorCode());
+                jsonObject.put("message","必要参数缺失:" + misColums.trim());
+                jsonObject.put("info",new JSONObject());
+                throw new CommonJsonExecption(jsonObject);
+
+            }
+        }
     }
 
 }
