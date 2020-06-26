@@ -2,6 +2,8 @@ package com.xuanyu.shirocontroller.util;
 
 import com.alibaba.fastjson.JSONObject;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.List;
 
 /*
@@ -79,6 +81,26 @@ public class CommonUtil {
     }
     public static void fillPageParam(final JSONObject paramObject) {
         fillPageParam(paramObject, 10);
+    }
+    // 把获取到的request 转换成json对象
+    public static JSONObject requestToJson(HttpServletRequest request){
+        JSONObject requestJson = new JSONObject();
+        Enumeration paraNames = request.getParameterNames();
+        while(paraNames.hasMoreElements()){
+            String paraName = (String)paraNames.nextElement();
+            String[] pv = request.getParameterValues(paraName);
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0;i<pv.length;i++){
+                if(pv[i].length()>0){
+                    if(i>0){
+                        sb.append(",");
+                    }
+                    sb.append(pv[i]);
+                }
+            }
+            requestJson.put(paraName,sb.toString());
+        }
+        return requestJson;
     }
 
 }

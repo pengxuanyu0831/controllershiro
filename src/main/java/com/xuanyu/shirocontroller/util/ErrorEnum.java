@@ -1,6 +1,8 @@
 package com.xuanyu.shirocontroller.util;
 
 public enum ErrorEnum {
+
+    // 返回状态的枚举类
     E_400("400", "请求处理异常，请稍后再试"),
     E_500("500", "请求方式有误,请检查 GET/POST"),
     E_501("501", "请求路径不存在"),
