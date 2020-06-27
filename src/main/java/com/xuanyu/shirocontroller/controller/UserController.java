@@ -75,6 +75,14 @@ public class UserController {
     }
 
 
+    @RequiresPermissions("role:delete")
+    @GetMapping("/deleteRole")
+    public JSONObject deleteRole(@RequestBody JSONObject requestJSon){
+        CommonUtil.addValidation(requestJSon,"roleId");
+        return userService.deleteRole(requestJSon);
+    }
+
+
 
 
 
