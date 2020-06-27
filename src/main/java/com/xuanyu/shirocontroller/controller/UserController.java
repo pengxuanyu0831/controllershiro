@@ -3,6 +3,7 @@ package com.xuanyu.shirocontroller.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.xuanyu.shirocontroller.service.UserService;
 import com.xuanyu.shirocontroller.util.CommonUtil;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.HttpRequestHandler;
@@ -42,6 +43,41 @@ public class UserController {
         CommonUtil.addValidation(requestJson,"nickname , roleId , deleteStaus ,UserId");
         return userService.updateUser(requestJson);
     }
+// =============角色层===============
+
+    // 获取权限返回前端
+    @RequiresPermissions(value = {"user:add, user:update"},logical = Logical.OR)
+    @GetMapping("/getAllRoles")
+    public JSONObject getAllRoles(){
+        return userService.getAllRoles();
+    }
+    // 列出角色
+    @RequiresPermissions("role:list")
+    @GetMapping("/listRole")
+    public JSONObject listRole(){
+        return userService.listRoles();
+    }
+
+    // 添加角色
+    @RequiresPermissions("role:add")
+    @GetMapping("/addRole")
+    public JSONObject addRole(@RequestBody JSONObject requestJson){
+        CommonUtil.addValidation(requestJson,"roleName,permission");
+        return userService.addRole(requestJson);
+    }
+
+    // 修改角色
+    @RequiresPermissions("role:update")
+    @GetMapping("/updateRole")
+    public JSONObject updateRole(@RequestBody JSONObject requestJson){
+        CommonUtil.addValidation(requestJson,"roleId,roleName,permission");
+        return userService.updateRole(requestJson);
+    }
+
+
+
+
+
 
 
 
